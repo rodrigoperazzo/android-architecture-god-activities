@@ -22,6 +22,7 @@ import com.rperazzo.weatherapp.WeatherManager.FindResult;
 import com.rperazzo.weatherapp.adapter.FindItemAdapter;
 import com.rperazzo.weatherapp.controller.WeatherController;
 import com.rperazzo.weatherapp.listener.IView;
+import com.rperazzo.weatherapp.listener.TempRepositoryRetrofit;
 import com.rperazzo.weatherapp.model.City;
 import com.rperazzo.weatherapp.provider.IWeatherProvider;
 import com.rperazzo.weatherapp.service.CityWeatherService;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mList = (ListView) findViewById(R.id.list);
 
-        service = new CityWeatherService();
+        service = new CityWeatherService(new TempRepositoryRetrofit());
         weatherController = new WeatherController(this, service);
 
 
