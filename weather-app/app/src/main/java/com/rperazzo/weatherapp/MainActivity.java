@@ -27,6 +27,7 @@ import com.rperazzo.weatherapp.WeatherManager.FindResult;
 //import com.rperazzo.weatherapp.WeatherManager.WeatherService;
 import com.rperazzo.weatherapp.Model.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -124,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (result.list.size() > 0) {
             cities.addAll(result.list);
+            cities.sort(new Comparator<City>() {
+                @Override
+                public int compare(City city, City t1) {
+                    return  city.getTemperature().compareTo(t1.getTemperature());
+                }
+            });
             mList.setVisibility(View.VISIBLE);
             mAdapter.notifyDataSetChanged();
         } else {
