@@ -1,16 +1,30 @@
 package com.rperazzo.weatherapp.Model;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.widget.Toast;
+
 import com.rperazzo.weatherapp.Service.WeatherManager;
+import com.rperazzo.weatherapp.Service.WeatherService;
+import com.rperazzo.weatherapp.Storage.TemperatureSharedPref;
+import com.rperazzo.weatherapp.Util.ConnectivityUtil;
+import com.rperazzo.weatherapp.View.Interface.ISearch;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Thiago on 10/11/2018.
  */
 
 public class City implements Serializable {
+
+
 
     public Integer id;
     public String name;
@@ -65,4 +79,5 @@ public class City implements Serializable {
         public String description;
         public String icon;
     }
+
 }

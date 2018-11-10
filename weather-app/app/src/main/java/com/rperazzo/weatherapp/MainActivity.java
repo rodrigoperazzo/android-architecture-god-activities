@@ -16,12 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rperazzo.weatherapp.Model.City;
+import com.rperazzo.weatherapp.Model.CityRepository;
+import com.rperazzo.weatherapp.Model.ICityRepository;
 import com.rperazzo.weatherapp.Service.WeatherManager;
 import com.rperazzo.weatherapp.Service.WeatherManager.FindResult;
 import com.rperazzo.weatherapp.Service.WeatherService;
 import com.rperazzo.weatherapp.Storage.TemperatureSharedPref;
 import com.rperazzo.weatherapp.Util.ConnectivityUtil;
 import com.rperazzo.weatherapp.View.FindItemAdapter;
+import com.rperazzo.weatherapp.View.Interface.ISearch;
 
 import java.util.ArrayList;
 
@@ -29,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ISearch {
 
     private EditText mEditText;
     private TextView mTextView;
@@ -38,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
     private TemperatureSharedPref temperatureSharedPref;
+    private ICityRepository cityRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        cityRepository = new CityRepository(this);
 
         temperatureSharedPref = new TemperatureSharedPref(getApplicationContext());
 
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    searchByName();
+                    cityRepository.searchByName(mEditText.getText().toString(), MainActivity.this);
                 }
                 return false;
             }
@@ -91,15 +97,16 @@ public class MainActivity extends AppCompatActivity {
         String currentUnits = temperatureSharedPref.getTemperatureUnit();
         if (!currentUnits.equals(newUnits)) {
             temperatureSharedPref.setTemperatureUnit(newUnits);
-            searchByName();
+            cityRepository.searchByName(mEditText.getText().toString(), this);
         }
     }
 
     public void onSearchClick(View view) {
-        searchByName();
+        cityRepository.searchByName(mEditText.getText().toString(), this);
     }
 
-    private void onStartLoading() {
+    @Override
+    public void onStartLoading() {
         mList.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTextView.setVisibility(View.GONE);
@@ -112,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onFinishLoading(WeatherManager.FindResult result){
+    @Override
+    public void onFinishLoading(WeatherManager.FindResult result){
 
         mProgressBar.setVisibility(View.GONE);
         cities.clear();
@@ -126,41 +134,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onFinishLoadingWithError() {
+    @Override
+    public void onFinishLoadingWithError() {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mTextView.setText("Error");
     }
-
-    private void searchByName() {
-        if (!ConnectivityUtil.isDeviceConnected(getApplicationContext())) {
-            Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String search = mEditText.getText().toString();
-        if (TextUtils.isEmpty(search)) {
-            return;
-        }
-
-        onStartLoading();
-
-        WeatherService wService = WeatherManager.getService();
-        String units = temperatureSharedPref.getTemperatureUnit();
-        final Call<FindResult> findCall = wService.find(search, units, WeatherManager.API_KEY);
-        findCall.enqueue(new Callback<FindResult>() {
-            @Override
-            public void onResponse(Call<FindResult> call, Response<FindResult> response) {
-                onFinishLoading(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<FindResult> call, Throwable t) {
-                onFinishLoadingWithError();
-            }
-        });
-    }
-
-
 
 }
