@@ -38,7 +38,6 @@ public class WeatherManager  {
         }
     }
 
-
     public static void getResults(String search, String units, final ICallback callback){
 
         IWeatherService wService = WeatherManager.getService();

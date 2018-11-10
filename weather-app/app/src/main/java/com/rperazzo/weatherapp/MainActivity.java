@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rperazzo.weatherapp.Util.Util;
 import com.rperazzo.weatherapp.View.*;
 
 import com.rperazzo.weatherapp.Model.Service.IWeatherService;
@@ -35,6 +36,7 @@ import java.util.Comparator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import com.rperazzo.weatherapp.Adapter.*;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
 
@@ -147,16 +149,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mTextView.setText("Error");
     }
 
-
-    public boolean isDeviceConnected() {
-        ConnectivityManager cm = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
-    }
-
     private void searchByName() {
-        if (!isDeviceConnected()) {
+        if (!Util.isDeviceConnected(this)) {
             Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
             return;
         }
@@ -181,62 +175,5 @@ public class MainActivity extends AppCompatActivity implements ICallback {
 
     public String getTemperatureUnit() {
         return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
-    }
-
-    public class FindItemAdapter extends ArrayAdapter<City> {
-
-        public FindItemAdapter(Context context, ArrayList<City> cities) {
-            super(context, 0, cities);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            final City city = getItem(position);
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
-                        .inflate(R.layout.city_list_item, parent, false);
-            }
-            TextView cityName = convertView.findViewById(R.id.cityNameTxt);
-            cityName.setText(city.getTitle());
-
-            TextView description = convertView.findViewById(R.id.descriptionTxt);
-            description.setText(city.getDescription());
-
-            TextView metric = convertView.findViewById(R.id.metricTxt);
-            String units = getTemperatureUnit();
-            if ("metric".equals(units)) {
-                metric.setText("ºC");
-            } else {
-                metric.setText("ºF");
-            }
-
-            TextView temp = convertView.findViewById(R.id.tempTxt);
-            temp.setText(city.getTemperature());
-
-            TextView wind = convertView.findViewById(R.id.windTxt);
-            if ("metric".equals(units)) {
-                wind.setText(city.getWind() + " m/s");
-            } else {
-                wind.setText(city.getWind() + " m/h");
-            }
-
-            TextView clouds = convertView.findViewById(R.id.cloudsTxt);
-            clouds.setText(city.getClouds());
-
-            TextView pressure = convertView.findViewById(R.id.pressureTxt);
-            pressure.setText(city.getPressure());
-
-            int resId = getContext().getResources().getIdentifier(
-                    "w_" + city.weather.get(0).icon,
-                    "drawable",
-                    getContext().getPackageName());
-
-            ImageView icon = convertView.findViewById(R.id.weatherIcon);
-            icon.setImageResource(resId);
-
-            return convertView;
-        }
     }
 }
