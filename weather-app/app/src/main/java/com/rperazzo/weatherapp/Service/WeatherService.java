@@ -13,6 +13,7 @@ public interface WeatherService {
     Call<WeatherManager.FindResult> find(
             @Query("q") String cityName,
             @Query("units") String units,
+            @Query("lang") String lang,
             @Query("appid") String apiKey
     );
 }
