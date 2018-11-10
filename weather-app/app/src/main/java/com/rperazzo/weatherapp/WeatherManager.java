@@ -4,8 +4,12 @@ import com.rperazzo.weatherapp.Model.*;
 import com.rperazzo.weatherapp.Model.Service.IWeatherService;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.rperazzo.weatherapp.View.*;
 
 public class WeatherManager  {
 
@@ -33,6 +37,26 @@ public class WeatherManager  {
             this.list = list;
         }
     }
+
+
+    public static void getResults(String search, String units, final ICallback callback){
+
+        IWeatherService wService = WeatherManager.getService();
+
+        final Call<FindResult> findCall = wService.find(search, units, API_KEY);
+        findCall.enqueue(new Callback<FindResult>() {
+            @Override
+            public void onResponse(Call<FindResult> call, Response<FindResult> response) {
+                callback.onFinishLoading(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<FindResult> call, Throwable t) {
+                callback.onFinishLoadingWithError();
+            }
+        });
+    }
+
 }
 
 
