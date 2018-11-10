@@ -2,6 +2,7 @@ package com.rperazzo.weatherapp.Model;
 
 import android.content.Context;
 
+import com.rperazzo.weatherapp.Presenter.IWeatherPresenter;
 import com.rperazzo.weatherapp.Util.IConnectivityUtil;
 import com.rperazzo.weatherapp.View.Interface.ISearch;
 
@@ -11,6 +12,6 @@ import com.rperazzo.weatherapp.View.Interface.ISearch;
 
 public interface ICityRepository {
 
-    boolean searchByName(String name, final ISearch search, String units, String lang, IConnectivityUtil connect);
+    boolean searchByName(String name, final IWeatherPresenter presenter, String units, String lang, IConnectivityUtil connect);
 
 }

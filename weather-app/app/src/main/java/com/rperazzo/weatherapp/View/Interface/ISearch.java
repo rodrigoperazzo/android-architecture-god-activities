@@ -10,5 +10,5 @@ public interface ISearch {
 
     void onStartLoading();
     void onFinishLoading(WeatherManager.FindResult result);
-    void onFinishLoadingWithError();
+    void onFinishLoadingWithError(String message);
 }

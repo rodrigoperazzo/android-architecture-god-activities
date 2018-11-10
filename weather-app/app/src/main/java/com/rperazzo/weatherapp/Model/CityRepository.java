@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.rperazzo.weatherapp.Presenter.IWeatherPresenter;
 import com.rperazzo.weatherapp.Service.WeatherManager;
 import com.rperazzo.weatherapp.Service.WeatherService;
 import com.rperazzo.weatherapp.Storage.TemperatureSharedPref;
@@ -22,17 +23,18 @@ import retrofit2.Response;
 public class CityRepository implements ICityRepository {
 
     @Override
-    public boolean searchByName(String name, final ISearch search, String units, String lang, IConnectivityUtil connect) {
+    public boolean searchByName(String name, final IWeatherPresenter presenter, String units, String lang, IConnectivityUtil connect) {
+
 
         if (!connect.isDeviceConnected()) {
+            presenter.onResultWithError("Sem conexão com a internet.");
             return false;
         }
 
         if (name.isEmpty()) {
+            presenter.onResultWithError("Nome não pode ser vazio.");
             return false;
         }
-
-        search.onStartLoading();
 
         WeatherService wService = WeatherManager.getService();
 
@@ -40,12 +42,12 @@ public class CityRepository implements ICityRepository {
         findCall.enqueue(new Callback<WeatherManager.FindResult>() {
             @Override
             public void onResponse(Call<WeatherManager.FindResult> call, Response<WeatherManager.FindResult> response) {
-                search.onFinishLoading(response.body());
+                presenter.onResult(response.body());
             }
 
             @Override
             public void onFailure(Call<WeatherManager.FindResult> call, Throwable t) {
-                search.onFinishLoadingWithError();
+                presenter.onResultWithError(t.getMessage());
             }
         });
 

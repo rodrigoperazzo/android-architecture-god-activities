@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.rperazzo.weatherapp.Model.City;
 import com.rperazzo.weatherapp.Model.CityRepository;
 import com.rperazzo.weatherapp.Model.ICityRepository;
+import com.rperazzo.weatherapp.Presenter.IWeatherPresenter;
+import com.rperazzo.weatherapp.Presenter.WeatherPresenter;
 import com.rperazzo.weatherapp.Service.WeatherManager;
 import com.rperazzo.weatherapp.Service.WeatherManager.FindResult;
 import com.rperazzo.weatherapp.Service.WeatherService;
@@ -42,17 +44,17 @@ public class MainActivity extends AppCompatActivity implements ISearch {
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
     private TemperatureSharedPref temperatureSharedPref;
-    private ICityRepository cityRepository;
     private IConnectivityUtil connect;
+    private IWeatherPresenter weatherPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        cityRepository = new CityRepository();
         connect = new ConnectivityUtil(getApplicationContext());
+
+        weatherPresenter = new WeatherPresenter(this);
 
         temperatureSharedPref = new TemperatureSharedPref(getApplicationContext());
 
@@ -68,9 +70,8 @@ public class MainActivity extends AppCompatActivity implements ISearch {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cityRepository.searchByName(
+                    weatherPresenter.searchByName(
                             mEditText.getText().toString(),
-                            MainActivity.this,
                             temperatureSharedPref.getTemperatureUnit(),
                             temperatureSharedPref.getTemperatureLang(),
                             connect);
@@ -114,9 +115,8 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         String currentUnits = temperatureSharedPref.getTemperatureUnit();
         if (!currentUnits.equals(newUnits)) {
             temperatureSharedPref.setTemperatureUnit(newUnits);
-            cityRepository.searchByName(
+            weatherPresenter.searchByName(
                     mEditText.getText().toString(),
-                    this,
                     temperatureSharedPref.getTemperatureUnit(),
                     temperatureSharedPref.getTemperatureLang(),
                     connect);
@@ -127,9 +127,8 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         String currentLang = temperatureSharedPref.getTemperatureLang();
         if (!currentLang.equals(newLang)) {
             temperatureSharedPref.setTemperatureLang(newLang);
-            cityRepository.searchByName(
+            weatherPresenter.searchByName(
                     mEditText.getText().toString(),
-                    this,
                     temperatureSharedPref.getTemperatureUnit(),
                     temperatureSharedPref.getTemperatureLang(),
                     connect);
@@ -137,9 +136,8 @@ public class MainActivity extends AppCompatActivity implements ISearch {
     }
 
     public void onSearchClick(View view) {
-        cityRepository.searchByName(
+        weatherPresenter.searchByName(
                 mEditText.getText().toString(),
-                this,
                 temperatureSharedPref.getTemperatureUnit(),
                 temperatureSharedPref.getTemperatureLang(),
                 connect);
@@ -175,10 +173,10 @@ public class MainActivity extends AppCompatActivity implements ISearch {
     }
 
     @Override
-    public void onFinishLoadingWithError() {
+    public void onFinishLoadingWithError(String message) {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
-        mTextView.setText("Error");
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 }
