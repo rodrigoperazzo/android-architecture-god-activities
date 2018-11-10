@@ -8,6 +8,7 @@ import com.rperazzo.weatherapp.Service.WeatherManager;
 import com.rperazzo.weatherapp.Service.WeatherService;
 import com.rperazzo.weatherapp.Storage.TemperatureSharedPref;
 import com.rperazzo.weatherapp.Util.ConnectivityUtil;
+import com.rperazzo.weatherapp.Util.IConnectivityUtil;
 import com.rperazzo.weatherapp.View.Interface.ISearch;
 
 import retrofit2.Call;
@@ -20,30 +21,21 @@ import retrofit2.Response;
 
 public class CityRepository implements ICityRepository {
 
-    private Context context;
-
-    public CityRepository(Context context){
-        this.context = context;
-    }
-
     @Override
-    public boolean searchByName(String name, final ISearch search) {
+    public boolean searchByName(String name, final ISearch search, String units, IConnectivityUtil connect) {
 
-        TemperatureSharedPref temperatureSharedPref = new TemperatureSharedPref(context);
-
-        if (!ConnectivityUtil.isDeviceConnected(context)) {
-            Toast.makeText(context, "No connection!", Toast.LENGTH_LONG).show();
+        if (!connect.isDeviceConnected()) {
             return false;
         }
 
-        if (TextUtils.isEmpty(name)) {
+        if (name.isEmpty()) {
             return false;
         }
 
         search.onStartLoading();
 
         WeatherService wService = WeatherManager.getService();
-        String units = temperatureSharedPref.getTemperatureUnit();
+        //String units = temperatureSharedPref.getTemperatureUnit();
         final Call<WeatherManager.FindResult> findCall = wService.find(name, units, WeatherManager.API_KEY);
         findCall.enqueue(new Callback<WeatherManager.FindResult>() {
             @Override
