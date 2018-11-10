@@ -8,9 +8,18 @@ import static org.junit.Assert.*;
 
 public class CityTest {
 
+    City city;
+
+    String name = "Recife";
+    String country = "Brazil";
+    
     @Before
     public void setUp() throws Exception {
-
+        city = new City();
+        city.name = name;
+        Sys sys = new Sys();
+        sys.country = country;
+        city.sys = sys;
     }
 
     @After
@@ -18,12 +27,20 @@ public class CityTest {
     }
 
 
-//    @Test
-//    function void testCityAttibutes(){
-//        City c = new City();
-//
-//        c.
-//
-//    }
+    @Test
+    public void testCityName(){
+        assertEquals(name, city.name);
+    }
+
+    @Test
+    public void testCitySys(){
+        assertEquals(country, city.sys.country);
+    }
+
+    @Test
+    public void testGetTitle(){
+        String expected = "Recife, BRAZIL";
+        assertEquals(expected, city.getTitle());
+    }
 
 }

@@ -27,17 +27,16 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5616757">
+    <splitter split-orientation="horizontal" split-proportion="0.48351648">
       <split-first>
         <leaf>
           <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/MainActivity.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="403">
-                  <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+                <state relative-caret-position="401">
+                  <caret line="193" column="18" selection-start-line="193" selection-start-column="18" selection-end-line="193" selection-end-column="18" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="method#onCreate#0;class#MainActivity#0" />
                     <element signature="method#onCreateOptionsMenu#0;class#MainActivity#0" />
                     <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" />
                     <element signature="method#updateUnitIfNecessary#0;class#MainActivity#0" />
@@ -47,7 +46,6 @@
                     <element signature="method#isDeviceConnected#0;class#MainActivity#0" />
                     <element signature="method#searchByName#0;class#MainActivity#0" />
                     <element signature="method#setTemperatureUnit#0;class#MainActivity#0" />
-                    <element signature="class#FindItemAdapter#0;class#MainActivity#0" />
                   </folding>
                 </state>
               </provider>
@@ -57,7 +55,7 @@
             <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/WeatherManager.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="255">
-                  <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+                  <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
                   <folding>
                     <element signature="imports" expanded="true" />
                     <element signature="class#WeatherService#0;class#WeatherManager#0" />
@@ -66,23 +64,13 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="CityTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="195">
-                  <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="City.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="City.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/City.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="660">
-                  <caret line="44" selection-start-line="44" selection-end-line="44" />
+                <state relative-caret-position="225">
+                  <caret line="17" selection-start-line="17" selection-end-line="17" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#318#319#0" expanded="true" />
                     <element signature="e#398#399#0" expanded="true" />
                     <element signature="e#590#591#0" expanded="true" />
                     <element signature="e#671#672#0" expanded="true" />
@@ -97,33 +85,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Wind.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Wind.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="90">
-                  <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Main.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Sys.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Sys.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -131,8 +92,8 @@
           <file leaf-file-name="CityTest.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="20" selection-start-line="20" selection-start-column="2" selection-end-line="26" selection-end-column="7" />
+                <state relative-caret-position="510">
+                  <caret line="44" column="35" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="35" />
                 </state>
               </provider>
             </entry>
@@ -2409,12 +2370,14 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/WeatherManager.java" />
-        <option value="$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Sys.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Main.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/City.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Wind.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Clouds.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Weather.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/City.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java" />
       </list>
     </option>
   </component>
@@ -2488,7 +2451,61 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Android JUnit.CityTest.testGetTitle">
+    <configuration name="CityTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.rperazzo.weatherapp.Model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.rperazzo.weatherapp.Model" />
+      <option name="MAIN_CLASS_NAME" value="com.rperazzo.weatherapp.Model.CityTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+      <method>
+        <option name="Make" enabled="false" />
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CityTest.testGetTitle" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.rperazzo.weatherapp.Model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.rperazzo.weatherapp.Model" />
+      <option name="MAIN_CLASS_NAME" value="com.rperazzo.weatherapp.Model.CityTest" />
+      <option name="METHOD_NAME" value="testGetTitle" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+      <method>
+        <option name="Make" enabled="false" />
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -2587,6 +2604,17 @@
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
     </configuration>
+    <list>
+      <item itemvalue="Android App.app" />
+      <item itemvalue="Android JUnit.CityTest" />
+      <item itemvalue="Android JUnit.CityTest.testGetTitle" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Android JUnit.CityTest.testGetTitle" />
+        <item itemvalue="Android JUnit.CityTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -2601,6 +2629,26 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="CityTest - 2018.11.10 at 10h 45m 11s.xml">
+      <configuration name="CityTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="CityTest - 2018.11.10 at 10h 48m 58s.xml">
+      <configuration name="CityTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="CityTest - 2018.11.10 at 10h 51m 04s.xml">
+      <configuration name="CityTest" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="CityTest_testGetTitle - 2018.11.10 at 10h 51m 39s.xml">
+      <configuration name="CityTest.testGetTitle" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="CityTest_testGetTitle - 2018.11.10 at 10h 52m 15s.xml">
+      <configuration name="CityTest.testGetTitle" configurationId="AndroidJUnit" />
+    </history-entry>
+    <history-entry file="CityTest_testGetTitle - 2018.11.10 at 10h 52m 55s.xml">
+      <configuration name="CityTest.testGetTitle" configurationId="AndroidJUnit" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <editor active="true" />
@@ -2612,19 +2660,19 @@
       <window_info id="Build Variants" order="1" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="6" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.32923076" />
       <window_info anchor="bottom" id="Version Control" order="2" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info anchor="bottom" id="Logcat" />
       <window_info id="Captures" order="7" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="0" />
-      <window_info active="true" content_ui="combo" id="Project" order="4" visible="true" weight="0.21306472" />
+      <window_info content_ui="combo" id="Project" order="4" visible="true" weight="0.21306472" />
       <window_info anchor="bottom" id="Build" order="3" weight="0.27076924" />
       <window_info anchor="right" id="Gradle" order="1" />
       <window_info id="Structure" order="5" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Theme Preview" order="2" />
-      <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="7" visible="true" weight="0.2902564" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="right" id="Device File Explorer" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="5" />
@@ -2641,53 +2689,18 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onCreate#0;class#MainActivity#0" />
-            <element signature="method#onCreateOptionsMenu#0;class#MainActivity#0" />
-            <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" />
-            <element signature="method#updateUnitIfNecessary#0;class#MainActivity#0" />
-            <element signature="method#onStartLoading#0;class#MainActivity#0" />
-            <element signature="method#onFinishLoading#0;class#MainActivity#0" />
-            <element signature="method#onFinishLoadingWithError#0;class#MainActivity#0" />
-            <element signature="method#isDeviceConnected#0;class#MainActivity#0" />
-            <element signature="method#searchByName#0;class#MainActivity#0" />
-            <element signature="method#setTemperatureUnit#0;class#MainActivity#0" />
-            <element signature="class#FindItemAdapter#0;class#MainActivity#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/WeatherManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="class#WeatherService#0;class#WeatherManager#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Sys.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
@@ -2698,13 +2711,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/City.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Wind.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        <state relative-caret-position="90">
+          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Clouds.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="193" column="18" selection-start-line="193" selection-start-column="18" selection-end-line="193" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#318#319#0" expanded="true" />
+            <element signature="method#onCreateOptionsMenu#0;class#MainActivity#0" />
+            <element signature="method#onOptionsItemSelected#0;class#MainActivity#0" />
+            <element signature="method#updateUnitIfNecessary#0;class#MainActivity#0" />
+            <element signature="method#onStartLoading#0;class#MainActivity#0" />
+            <element signature="method#onFinishLoading#0;class#MainActivity#0" />
+            <element signature="method#onFinishLoadingWithError#0;class#MainActivity#0" />
+            <element signature="method#isDeviceConnected#0;class#MainActivity#0" />
+            <element signature="method#searchByName#0;class#MainActivity#0" />
+            <element signature="method#setTemperatureUnit#0;class#MainActivity#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Weather.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Sys.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/City.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
             <element signature="e#398#399#0" expanded="true" />
             <element signature="e#590#591#0" expanded="true" />
             <element signature="e#671#672#0" expanded="true" />
@@ -2718,10 +2777,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/rperazzo/weatherapp/Model/Wind.java">
+    <entry file="file://$PROJECT_DIR$/app/src/test/java/com/rperazzo/weatherapp/Model/CityTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        <state relative-caret-position="510">
+          <caret line="44" column="35" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="35" />
         </state>
       </provider>
     </entry>
