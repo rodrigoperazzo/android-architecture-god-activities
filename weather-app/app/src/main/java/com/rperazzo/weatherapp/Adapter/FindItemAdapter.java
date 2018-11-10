@@ -36,7 +36,7 @@ public class FindItemAdapter extends ArrayAdapter<City> {
         description.setText(city.getDescription());
 
         TextView metric = convertView.findViewById(R.id.metricTxt);
-        String units = Util.getTemperatureUnit();
+        String units = Util.getTemperatureUnit(getContext());
         if ("metric".equals(units)) {
             metric.setText("ºC");
         } else {

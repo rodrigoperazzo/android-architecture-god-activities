@@ -144,6 +144,6 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         onStartLoading();
         String units = Util.getTemperatureUnit(this);
 
-        WeatherManager.getResults(search, units, this);
+        new WeatherManager().getResults(search, units, this);
     }
 }

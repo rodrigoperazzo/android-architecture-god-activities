@@ -1,7 +1,7 @@
 package com.rperazzo.weatherapp.Model;
 
-import com.rperazzo.weatherapp.Model.Service.IWeatherService;
+import com.rperazzo.weatherapp.View.ICallback;
 
 public interface IWeatherManager {
-    IWeatherService getService();
+    void getResults(String search, String units, final ICallback callback);
 }

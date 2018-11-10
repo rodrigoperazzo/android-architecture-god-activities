@@ -1,7 +1,6 @@
 package com.rperazzo.weatherapp;
 import java.util.List;
 import com.rperazzo.weatherapp.Model.*;
-import com.rperazzo.weatherapp.Model.Service.IWeatherService;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -9,9 +8,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
 import com.rperazzo.weatherapp.View.*;
 
-public class WeatherManager  {
+public class WeatherManager implements IWeatherManager{
 
     private static final String API_URL =
             "http://api.openweathermap.org/data/2.5/";
@@ -19,8 +21,15 @@ public class WeatherManager  {
             "520d6b47a12735bee8f69c57737d145f";
 
     private static OkHttpClient mClient = new OkHttpClient();
+    /*private IServiceManager _service;
 
-    public static IWeatherService getService() {
+    public WeatherManager(IServiceManager service){
+        _service = service;
+    }*/
+
+
+
+    private static IWeatherService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -28,6 +37,15 @@ public class WeatherManager  {
                 .build();
 
         return retrofit.create(IWeatherService.class);
+    }
+
+    public interface IWeatherService   {
+        @GET("find")
+        Call<WeatherManager.FindResult> find(
+                @Query("q") String cityName,
+                @Query("units") String units,
+                @Query("appid") String apiKey
+        );
     }
 
     public class FindResult {
@@ -38,7 +56,7 @@ public class WeatherManager  {
         }
     }
 
-    public static void getResults(String search, String units, final ICallback callback){
+    public void getResults(String search, String units, final ICallback callback){
 
         IWeatherService wService = WeatherManager.getService();
 
@@ -46,6 +64,7 @@ public class WeatherManager  {
         findCall.enqueue(new Callback<FindResult>() {
             @Override
             public void onResponse(Call<FindResult> call, Response<FindResult> response) {
+
                 callback.onFinishLoading(response.body());
             }
 

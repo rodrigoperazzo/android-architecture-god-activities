@@ -26,6 +26,15 @@ public class CityTest {
     public void tearDown() throws Exception {
     }
 
+    @Test
+    public  void testTemperature(){
+
+        string cidade = "olinda";
+
+
+
+
+    }
 
     @Test
     public void testCityName(){
