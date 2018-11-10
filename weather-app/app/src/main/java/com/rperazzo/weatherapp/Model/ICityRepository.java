@@ -11,6 +11,6 @@ import com.rperazzo.weatherapp.View.Interface.ISearch;
 
 public interface ICityRepository {
 
-    boolean searchByName(String name, final ISearch search, String units, IConnectivityUtil connect);
+    boolean searchByName(String name, final ISearch search, String units, String lang, IConnectivityUtil connect);
 
 }

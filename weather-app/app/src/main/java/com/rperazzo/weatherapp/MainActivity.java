@@ -68,7 +68,12 @@ public class MainActivity extends AppCompatActivity implements ISearch {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cityRepository.searchByName(mEditText.getText().toString(), MainActivity.this, temperatureSharedPref.getTemperatureUnit(),connect);
+                    cityRepository.searchByName(
+                            mEditText.getText().toString(),
+                            MainActivity.this,
+                            temperatureSharedPref.getTemperatureUnit(),
+                            temperatureSharedPref.getTemperatureLang(),
+                            connect);
                 }
                 return false;
             }
@@ -109,7 +114,12 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         String currentUnits = temperatureSharedPref.getTemperatureUnit();
         if (!currentUnits.equals(newUnits)) {
             temperatureSharedPref.setTemperatureUnit(newUnits);
-            cityRepository.searchByName(mEditText.getText().toString(), this, temperatureSharedPref.getTemperatureUnit(), connect);
+            cityRepository.searchByName(
+                    mEditText.getText().toString(),
+                    this,
+                    temperatureSharedPref.getTemperatureUnit(),
+                    temperatureSharedPref.getTemperatureLang(),
+                    connect);
         }
     }
 
@@ -117,12 +127,22 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         String currentLang = temperatureSharedPref.getTemperatureLang();
         if (!currentLang.equals(newLang)) {
             temperatureSharedPref.setTemperatureLang(newLang);
-            cityRepository.searchByName(mEditText.getText().toString(), this);
+            cityRepository.searchByName(
+                    mEditText.getText().toString(),
+                    this,
+                    temperatureSharedPref.getTemperatureUnit(),
+                    temperatureSharedPref.getTemperatureLang(),
+                    connect);
         }
     }
 
     public void onSearchClick(View view) {
-        cityRepository.searchByName(mEditText.getText().toString(), this, temperatureSharedPref.getTemperatureUnit(), connect);
+        cityRepository.searchByName(
+                mEditText.getText().toString(),
+                this,
+                temperatureSharedPref.getTemperatureUnit(),
+                temperatureSharedPref.getTemperatureLang(),
+                connect);
     }
 
     @Override

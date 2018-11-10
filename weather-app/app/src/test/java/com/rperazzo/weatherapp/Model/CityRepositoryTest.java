@@ -18,7 +18,7 @@ public class CityRepositoryTest {
         CityRepository repo = new CityRepository();
         String text = "";
 
-        assertEquals(false, repo.searchByName(text, main, "C", new IConnectivityUtil() {
+        assertEquals(false, repo.searchByName(text, main, "C", "en", new IConnectivityUtil() {
             @Override
             public boolean isDeviceConnected() {
                 return true;
@@ -34,7 +34,7 @@ public class CityRepositoryTest {
         CityRepository repo = new CityRepository();
         String text = "recife";
 
-        assertEquals(true, repo.searchByName(text, main, "C", new IConnectivityUtil() {
+        assertEquals(true, repo.searchByName(text, main, "C", "en", new IConnectivityUtil() {
             @Override
             public boolean isDeviceConnected() {
                 return true;
@@ -50,7 +50,7 @@ public class CityRepositoryTest {
         CityRepository repo = new CityRepository();
         String text = "recife";
 
-        assertEquals(false, repo.searchByName(text, main, "C", new IConnectivityUtil() {
+        assertEquals(false, repo.searchByName(text, main, "C", "en", new IConnectivityUtil() {
             @Override
             public boolean isDeviceConnected() {
                 return false;
