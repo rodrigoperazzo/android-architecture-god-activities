@@ -3,7 +3,6 @@ package com.rperazzo.weatherapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rperazzo.weatherapp.Util.Util;
+import com.rperazzo.weatherapp.Presenter.MainActivityPresenter;
 import com.rperazzo.weatherapp.View.*;
 
 import com.rperazzo.weatherapp.Model.*;
@@ -25,7 +24,7 @@ import java.util.Comparator;
 
 import com.rperazzo.weatherapp.Adapter.*;
 
-public class MainActivity extends AppCompatActivity implements ICallback {
+public class MainActivity extends AppCompatActivity implements IView {
 
     private EditText mEditText;
     private TextView mTextView;
@@ -33,11 +32,14 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     private ListView mList;
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
+    MainActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        presenter = new MainActivityPresenter(this);
 
         mEditText = findViewById(R.id.editText);
         mTextView = findViewById(R.id.textView);
@@ -51,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    searchByName();
+                    String search = mEditText.getText().toString();
+                    presenter.searchByName(search);
                 }
                 return false;
             }
@@ -68,30 +71,37 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        String search = mEditText.getText().toString();
+
         if (id == R.id.menu_celcius) {
-            updateUnitIfNecessary("metric");
+            presenter.updateUnitIfNecessary("metric", search);
             return true;
         } else if (id == R.id.menu_fahrenheit) {
-            updateUnitIfNecessary("imperial");
+            presenter.updateUnitIfNecessary("imperial", search);
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateUnitIfNecessary(String newUnits) {
-        String currentUnits = Util.getTemperatureUnit(this);
-        if (!currentUnits.equals(newUnits)) {
-            Util.setTemperatureUnit(newUnits, this);
-            searchByName();
-        }
+
+    public void showMessage(String message){
+        Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
+
     }
 
     public void onSearchClick(View view) {
-        searchByName();
+        String search = mEditText.getText().toString();
+        presenter.searchByName(search);
     }
 
-    private void onStartLoading() {
+    public Context getContext() {
+
+        return this;
+    }
+
+    public void onStartLoading() {
         mList.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTextView.setVisibility(View.GONE);
@@ -130,20 +140,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         mTextView.setText("Error");
     }
 
-    private void searchByName() {
-        if (!Util.isDeviceConnected(this)) {
-            Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String search = mEditText.getText().toString();
-        if (TextUtils.isEmpty(search)) {
-            return;
-        }
-
-        onStartLoading();
-        String units = Util.getTemperatureUnit(this);
-
-        new WeatherManager().getResults(search, units, this);
-    }
+//
+//    private void searchByName() {
+//        String search = mEditText.getText().toString();
+//
+//    }
 }

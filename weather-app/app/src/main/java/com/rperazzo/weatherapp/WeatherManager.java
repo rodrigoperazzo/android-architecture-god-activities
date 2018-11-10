@@ -27,8 +27,6 @@ public class WeatherManager implements IWeatherManager{
         _service = service;
     }*/
 
-
-
     private static IWeatherService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
@@ -56,7 +54,7 @@ public class WeatherManager implements IWeatherManager{
         }
     }
 
-    public void getResults(String search, String units, final ICallback callback){
+    public void getResults(String search, String units, final IView callback){
 
         IWeatherService wService = WeatherManager.getService();
 
