@@ -22,9 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rperazzo.weatherapp.Model.Service.IWeatherService;
 import com.rperazzo.weatherapp.WeatherManager.FindResult;
-import com.rperazzo.weatherapp.WeatherManager.WeatherService;
-import com.rperazzo.weatherapp.Model.City;
+//import com.rperazzo.weatherapp.WeatherManager.WeatherService;
+import com.rperazzo.weatherapp.Model.*;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
         onStartLoading();
 
-        WeatherService wService = WeatherManager.getService();
+        IWeatherService wService = WeatherManager.getService();
         String units = getTemperatureUnit();
         final Call<FindResult> findCall = wService.find(search, units, WeatherManager.API_KEY);
         findCall.enqueue(new Callback<FindResult>() {

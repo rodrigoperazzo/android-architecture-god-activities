@@ -12,7 +12,7 @@ public class CityTest {
 
     String name = "Recife";
     String country = "Brazil";
-    
+
     @Before
     public void setUp() throws Exception {
         city = new City();
@@ -29,6 +29,7 @@ public class CityTest {
 
     @Test
     public void testCityName(){
+        assertNotNull(city.name);
         assertEquals(name, city.name);
     }
 
