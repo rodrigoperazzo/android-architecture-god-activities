@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.rperazzo.weatherapp.Model.City;
 import com.rperazzo.weatherapp.R;
+import com.rperazzo.weatherapp.Util.Util;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,7 @@ public class FindItemAdapter extends ArrayAdapter<City> {
         description.setText(city.getDescription());
 
         TextView metric = convertView.findViewById(R.id.metricTxt);
-        String units = getTemperatureUnit();
+        String units = Util.getTemperatureUnit();
         if ("metric".equals(units)) {
             metric.setText("ºC");
         } else {

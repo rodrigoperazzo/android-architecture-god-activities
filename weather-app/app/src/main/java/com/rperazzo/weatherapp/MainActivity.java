@@ -1,22 +1,15 @@
 package com.rperazzo.weatherapp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,25 +18,15 @@ import android.widget.Toast;
 import com.rperazzo.weatherapp.Util.Util;
 import com.rperazzo.weatherapp.View.*;
 
-import com.rperazzo.weatherapp.Model.Service.IWeatherService;
-import com.rperazzo.weatherapp.WeatherManager.FindResult;
-//import com.rperazzo.weatherapp.WeatherManager.WeatherService;
 import com.rperazzo.weatherapp.Model.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import com.rperazzo.weatherapp.Adapter.*;
 
 public class MainActivity extends AppCompatActivity implements ICallback {
 
-    private static final String PREFERENCE_NAME = "com.rperazzo.weatherapp.shared";
-    private static final String TEMPERATURE_UNIT_KEY = "TEMPERATURE_UNIT_KEY";
-
-    private SharedPreferences mSharedPref;
     private EditText mEditText;
     private TextView mTextView;
     private ProgressBar mProgressBar;
@@ -56,12 +39,10 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPref = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-
-        mEditText = (EditText) findViewById(R.id.editText);
-        mTextView = (TextView) findViewById(R.id.textView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mList = (ListView) findViewById(R.id.list);
+        mEditText = findViewById(R.id.editText);
+        mTextView = findViewById(R.id.textView);
+        mProgressBar = findViewById(R.id.progressBar);
+        mList = findViewById(R.id.list);
 
         mAdapter = new FindItemAdapter(this, cities);
         mList.setAdapter(mAdapter);
@@ -99,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements ICallback {
     }
 
     private void updateUnitIfNecessary(String newUnits) {
-        String currentUnits = getTemperatureUnit();
+        String currentUnits = Util.getTemperatureUnit(this);
         if (!currentUnits.equals(newUnits)) {
-            setTemperatureUnit(newUnits);
+            Util.setTemperatureUnit(newUnits, this);
             searchByName();
         }
     }
@@ -161,18 +142,8 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         }
 
         onStartLoading();
-        String units = getTemperatureUnit();
+        String units = Util.getTemperatureUnit(this);
 
         WeatherManager.getResults(search, units, this);
-    }
-
-    public void setTemperatureUnit(String value) {
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putString(TEMPERATURE_UNIT_KEY, value);
-        editor.apply();
-    }
-
-    public String getTemperatureUnit() {
-        return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
     }
 }
