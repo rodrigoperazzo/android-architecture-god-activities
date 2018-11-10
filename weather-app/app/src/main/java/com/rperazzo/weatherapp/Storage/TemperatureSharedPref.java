@@ -17,6 +17,7 @@ public class TemperatureSharedPref {
     }
 
     private static final String TEMPERATURE_UNIT_KEY = "TEMPERATURE_UNIT_KEY";
+    private static final String TEMPERATURE_LANG_KEY = "TEMPERATURE_LANG_KEY";
 
     private SharedPreferences mSharedPref;
 
@@ -28,5 +29,15 @@ public class TemperatureSharedPref {
 
     public String getTemperatureUnit() {
         return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
+    }
+
+    public void setTemperatureLang(String value) {
+        SharedPreferences.Editor editor = mSharedPref.edit();
+        editor.putString(TEMPERATURE_LANG_KEY, value);
+        editor.apply();
+    }
+
+    public String getTemperatureLang() {
+        return mSharedPref.getString(TEMPERATURE_LANG_KEY, "lang");
     }
 }

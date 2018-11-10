@@ -82,12 +82,21 @@ public class MainActivity extends AppCompatActivity implements ISearch {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menu_celcius) {
-            updateUnitIfNecessary("metric");
-            return true;
-        } else if (id == R.id.menu_fahrenheit) {
-            updateUnitIfNecessary("imperial");
-            return true;
+        switch (id){
+            case R.id.menu_celcius:
+                updateUnitIfNecessary("metric");
+                return true;
+            case R.id.menu_fahrenheit:
+                updateUnitIfNecessary("imperial");
+                return true;
+            case R.id.menu_en:
+                updateLangIfNecessary("en");
+                return true;
+            case R.id.menu_pt:
+                updateLangIfNecessary("pt");
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -97,6 +106,14 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         String currentUnits = temperatureSharedPref.getTemperatureUnit();
         if (!currentUnits.equals(newUnits)) {
             temperatureSharedPref.setTemperatureUnit(newUnits);
+            cityRepository.searchByName(mEditText.getText().toString(), this);
+        }
+    }
+
+    private void updateLangIfNecessary(String newLang) {
+        String currentLang = temperatureSharedPref.getTemperatureLang();
+        if (!currentLang.equals(newLang)) {
+            temperatureSharedPref.setTemperatureLang(newLang);
             cityRepository.searchByName(mEditText.getText().toString(), this);
         }
     }
@@ -125,12 +142,12 @@ public class MainActivity extends AppCompatActivity implements ISearch {
         mProgressBar.setVisibility(View.GONE);
         cities.clear();
 
-        if (result.list.size() > 0) {
+        if(result == null){
+            mTextView.setText("No results.");
+        }else if (result.list.size() > 0) {
             cities.addAll(result.list);
             mList.setVisibility(View.VISIBLE);
             mAdapter.notifyDataSetChanged();
-        } else {
-            mTextView.setText("No results.");
         }
     }
 

@@ -43,8 +43,11 @@ public class CityRepository implements ICityRepository {
         search.onStartLoading();
 
         WeatherService wService = WeatherManager.getService();
+
         String units = temperatureSharedPref.getTemperatureUnit();
-        final Call<WeatherManager.FindResult> findCall = wService.find(name, units, WeatherManager.API_KEY);
+        String lang = temperatureSharedPref.getTemperatureLang();
+
+        final Call<WeatherManager.FindResult> findCall = wService.find(name, units, lang, WeatherManager.API_KEY);
         findCall.enqueue(new Callback<WeatherManager.FindResult>() {
             @Override
             public void onResponse(Call<WeatherManager.FindResult> call, Response<WeatherManager.FindResult> response) {
