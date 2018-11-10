@@ -45,8 +45,6 @@ public class WeatherManager {
             this.list = list;
         }
     }
-
-
 }
 
 

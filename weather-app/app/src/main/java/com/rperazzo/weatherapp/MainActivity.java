@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.rperazzo.weatherapp.WeatherManager.FindResult;
 import com.rperazzo.weatherapp.WeatherManager.WeatherService;
-
+import com.rperazzo.weatherapp.Model.City;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private ListView mList;
     private FindItemAdapter mAdapter;
-    private ArrayList<WeatherManager.City> cities = new ArrayList<>();
+    private ArrayList<City> cities = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,16 +182,16 @@ public class MainActivity extends AppCompatActivity {
         return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
     }
 
-    public class FindItemAdapter extends ArrayAdapter<WeatherManager.City> {
+    public class FindItemAdapter extends ArrayAdapter<City> {
 
-        public FindItemAdapter(Context context, ArrayList<WeatherManager.City> cities) {
+        public FindItemAdapter(Context context, ArrayList<City> cities) {
             super(context, 0, cities);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            final WeatherManager.City city = getItem(position);
+            final City city = getItem(position);
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext())
