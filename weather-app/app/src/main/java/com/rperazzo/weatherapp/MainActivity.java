@@ -163,8 +163,7 @@ public class MainActivity extends AppCompatActivity implements ICallback {
         onStartLoading();
         String units = getTemperatureUnit();
 
-        WeatherManager.getResults(search, units, );
-
+        WeatherManager.getResults(search, units, this);
     }
 
     public void setTemperatureUnit(String value) {
