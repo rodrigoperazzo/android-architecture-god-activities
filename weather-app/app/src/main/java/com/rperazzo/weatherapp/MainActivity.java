@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.rperazzo.weatherapp.WeatherManager.FindResult;
 import com.rperazzo.weatherapp.adapter.FindItemAdapter;
-import com.rperazzo.weatherapp.controller.WeatherController;
 import com.rperazzo.weatherapp.listener.IView;
 import com.rperazzo.weatherapp.model.City;
 import com.rperazzo.weatherapp.provider.IWeatherProvider;
@@ -42,10 +41,11 @@ public class MainActivity extends AppCompatActivity implements IView {
     private ListView mList;
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
-    private WeatherController  weatherController;
     private CityWeatherService service;
-
+    private WeatherPresenter presenter;
     private SharedPreferences mSharedPref;
+    private IsDeviceChecking check;
+
     private static final String TEMPERATURE_UNIT_KEY = "TEMPERATURE_UNIT_KEY";
 
     private static final String PREFERENCE_NAME = "com.rperazzo.weatherapp.shared";
@@ -65,8 +65,9 @@ public class MainActivity extends AppCompatActivity implements IView {
         mList = (ListView) findViewById(R.id.list);
 
         service = new CityWeatherService();
-        weatherController = new WeatherController(this, service);
+        check = new IsDeviceChecking(this);
 
+        presenter = new WeatherPresenter(this, service, check);
 
         mAdapter = new FindItemAdapter(this, cities, getTemperatureUnit());
         mList.setAdapter(mAdapter);
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         searchByName();
     }
 
-    private void onStartLoading() {
+    /*private void onStartLoading() {
         mList.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTextView.setVisibility(View.GONE);
@@ -128,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements IView {
                     getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-    }
+    }*/
 
-    private void onFinishLoading(WeatherManager.FindResult result) {
+    /*private void onFinishLoading(WeatherManager.FindResult result) {
 
         mProgressBar.setVisibility(View.GONE);
         cities.clear();
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         } else {
             mTextView.setText("No results.");
         }
-    }
+    }*/
 
     private void onFinishLoadingWithError() {
         mProgressBar.setVisibility(View.GONE);
@@ -150,43 +151,19 @@ public class MainActivity extends AppCompatActivity implements IView {
         mTextView.setText("Error");
     }
 
-    public boolean isDeviceConnected() {
+    /*public boolean isDeviceConnected() {
         ConnectivityManager cm = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
-    }
+    }*/
 
     private void searchByName() {
 
-        if (!isDeviceConnected()) {
-            Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        onStartLoading();
-
-        weatherController.searchByName(mEditText.getText().toString(), getTemperatureUnit());
+        presenter.searchByName(mEditText.getText().toString(), getTemperatureUnit());
 
     }
 
-    @Override
-    public void update() {
-
-        List<City> cidades = service.getCities();
-        mAdapter = new FindItemAdapter(this, cidades , getTemperatureUnit());
-        mList.setAdapter(mAdapter);
-
-        mProgressBar.setVisibility(View.GONE);
-        cities.clear();
-
-        if (cidades.size() > 0) {
-            mList.setVisibility(View.VISIBLE);
-            mAdapter.notifyDataSetChanged();
-        } else {
-            mTextView.setText("No results.");
-        }
-    }
 
     public String getTemperatureUnit() {
         return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
@@ -196,5 +173,37 @@ public class MainActivity extends AppCompatActivity implements IView {
         SharedPreferences.Editor editor = mSharedPref.edit();
         editor.putString(TEMPERATURE_UNIT_KEY, value);
         editor.apply();
+    }
+
+    @Override
+    public void mostrarListaCidade(List<City> cities) {
+
+        mList.setVisibility(View.VISIBLE);
+        mAdapter = new FindItemAdapter(this, cities , getTemperatureUnit());
+        mList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void mostrarLoading() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mList.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void removerLoading() {
+        mProgressBar.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void mostrarListaVazia() {
+        mTextView.setText("No results.");
+        mList.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void mostrarSemInternet() {
+        Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
     }
 }
