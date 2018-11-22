@@ -27,9 +27,11 @@ public class WeatherController {
 
     public void searchByName(String city, String temperatureUnit) {
 
-        if (TextUtils.isEmpty(city)) {
+        if (city.isEmpty()) {
             return;
         }
+
+        //city.length() != 0;
 
         service.find(city, new OnSearchCity() {
             @Override

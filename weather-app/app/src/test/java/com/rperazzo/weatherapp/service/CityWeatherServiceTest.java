@@ -1,51 +1,43 @@
 package com.rperazzo.weatherapp.service;
 
-import com.rperazzo.weatherapp.listener.ITempRepository;
+import com.rperazzo.weatherapp.MainActivity;
+import com.rperazzo.weatherapp.controller.WeatherController;
 import com.rperazzo.weatherapp.listener.OnSearchCity;
-import com.rperazzo.weatherapp.model.City;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import static org.mockito.Mockito.*;
 
 public class CityWeatherServiceTest {
 
-/*
-   ArrayList city = new ArrayList<City>();
+    WeatherController controller;
+    @Mock
+    MainActivity main;
+    @Mock
+    CityWeatherService service;
 
-    public void findCityTest(){
-        City recife = new City();
+    @Captor
+    private ArgumentCaptor<OnSearchCity> argumentCaptor;
 
-        ITempRepository repository = new ITempRepository() {
-            @Override
-            public void getCidades(String city, String unidade, OnFindCitiesCallback callback) {
-
-                city = "Recife";
-                unidade = "c";
-                callback = new OnFindCitiesCallback() {
-                    @Override
-                    public void onFindCitie(List<City> cities) {
-
-                        cities = CityWeatherServiceTest.this.city;
-                    }
-                };
-
-            }
-        };
-
-        CityWeatherService service = new CityWeatherService(repository);
-
-        boolean ExpResult = true;
-        boolean result = service.find("Recife", new OnSearchCity() {
-            @Override
-            public void onSearchCity() {
-
-            },
-        }, "c");
-
-       // return equals(ExpResult, result);
-
+    @Before
+    public void setUp(){
+        MockitoAnnotations.initMocks(this);
+        controller = new WeatherController(main, service);
     }
-*/
+
+    @Test
+    public void testFindCity(){
+        String city = "recife";
+        controller.searchByName(city,"F");
+
+        verify(service).find(eq(city), argumentCaptor.capture(), eq("F"));
+        argumentCaptor.getValue().onSearchCity();
+
+        verify(main).update();
+    }
+
+
 }
