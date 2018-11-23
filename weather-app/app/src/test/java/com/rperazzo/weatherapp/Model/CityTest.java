@@ -22,34 +22,12 @@ public class CityTest {
         city.sys = sys;
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public  void testTemperature(){
-
-        string cidade = "olinda";
-
-
-
-
-    }
-
-    @Test
-    public void testCityName(){
-        assertNotNull(city.name);
-        assertEquals(name, city.name);
-    }
-
-    @Test
-    public void testCitySys(){
-        assertEquals(country, city.sys.country);
-    }
-
     @Test
     public void testGetTitle(){
         String expected = "Recife, BRAZIL";
+
+
+
         assertEquals(expected, city.getTitle());
     }
 
