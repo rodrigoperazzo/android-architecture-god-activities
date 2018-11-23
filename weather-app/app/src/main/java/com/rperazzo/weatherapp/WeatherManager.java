@@ -1,43 +1,49 @@
 package com.rperazzo.weatherapp;
-
-import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.util.List;
+import com.rperazzo.weatherapp.Model.*;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public class WeatherManager {
+import com.rperazzo.weatherapp.View.*;
+
+public class WeatherManager implements IWeatherManager{
 
     private static final String API_URL =
             "http://api.openweathermap.org/data/2.5/";
     public static final String API_KEY =
             "520d6b47a12735bee8f69c57737d145f";
 
-    public interface WeatherService {
-        @GET("find")
-        Call<FindResult> find(
-                @Query("q") String cityName,
-                @Query("units") String units,
-                @Query("appid") String apiKey
-        );
-    }
-
     private static OkHttpClient mClient = new OkHttpClient();
+    /*private IServiceManager _service;
 
-    public static WeatherService getService() {
+    public WeatherManager(IServiceManager service){
+        _service = service;
+    }*/
+
+    private static IWeatherService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(mClient)
                 .build();
 
-        return retrofit.create(WeatherService.class);
+        return retrofit.create(IWeatherService.class);
+    }
+
+    public interface IWeatherService   {
+        @GET("find")
+        Call<WeatherManager.FindResult> find(
+                @Query("q") String cityName,
+                @Query("units") String units,
+                @Query("appid") String apiKey
+        );
     }
 
     public class FindResult {
@@ -48,62 +54,25 @@ public class WeatherManager {
         }
     }
 
-    public class City implements Serializable {
+    public void getResults(String search, String units, final IView callback){
 
-        public Integer id;
-        public String name;
-        public Sys sys;
-        public Main main;
-        public Wind wind;
-        public Clouds clouds;
-        public List<Weather> weather;
+        IWeatherService wService = WeatherManager.getService();
 
-        public String getTitle() {
-            return this.name + ", " + this.sys.country.toUpperCase();
-        }
+        final Call<FindResult> findCall = wService.find(search, units, API_KEY);
+        findCall.enqueue(new Callback<FindResult>() {
+            @Override
+            public void onResponse(Call<FindResult> call, Response<FindResult> response) {
 
-        public String getPressure() {
-            return new DecimalFormat("#").format(this.main.pressure) + " hpa";
-        }
+                callback.onFinishLoading(response.body());
+            }
 
-        public String getWind() {
-            return "wind " + new DecimalFormat("#.#").format(this.wind.speed);
-        }
-
-        public String getClouds() {
-            return "clouds " + this.clouds.all + "%";
-        }
-
-        public String getTemperature() {
-            return new DecimalFormat("#").format(this.main.temp);
-        }
-
-        public String getDescription() {
-            return this.weather.get(0).description;
-        }
-
-        public class Sys implements Serializable {
-            public String country;
-        }
-
-        public class Main implements Serializable {
-            public double temp;
-            public double pressure;
-        }
-
-        public class Wind implements Serializable {
-            public double speed;
-        }
-
-        public class Clouds implements Serializable {
-            public int all;
-        }
-
-        public class Weather implements Serializable {
-            public String description;
-            public String icon;
-        }
+            @Override
+            public void onFailure(Call<FindResult> call, Throwable t) {
+                callback.onFinishLoadingWithError();
+            }
+        });
     }
+
 }
 
 

@@ -1,69 +1,60 @@
 package com.rperazzo.weatherapp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rperazzo.weatherapp.WeatherManager.FindResult;
-import com.rperazzo.weatherapp.WeatherManager.WeatherService;
+import com.rperazzo.weatherapp.Presenter.MainActivityPresenter;
+import com.rperazzo.weatherapp.View.*;
+
+import com.rperazzo.weatherapp.Model.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.rperazzo.weatherapp.Adapter.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IView {
 
-    private static final String PREFERENCE_NAME = "com.rperazzo.weatherapp.shared";
-    private static final String TEMPERATURE_UNIT_KEY = "TEMPERATURE_UNIT_KEY";
-
-    private SharedPreferences mSharedPref;
     private EditText mEditText;
     private TextView mTextView;
     private ProgressBar mProgressBar;
     private ListView mList;
     private FindItemAdapter mAdapter;
-    private ArrayList<WeatherManager.City> cities = new ArrayList<>();
+    private ArrayList<City> cities = new ArrayList<>();
+    MainActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSharedPref = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        presenter = new MainActivityPresenter(this);
 
-        mEditText = (EditText) findViewById(R.id.editText);
-        mTextView = (TextView) findViewById(R.id.textView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mList = (ListView) findViewById(R.id.list);
+        mEditText = findViewById(R.id.editText);
+        mTextView = findViewById(R.id.textView);
+        mProgressBar = findViewById(R.id.progressBar);
+        mList = findViewById(R.id.list);
 
-        mAdapter = new FindItemAdapter(this, cities);
+        mAdapter = new FindItemAdapter(this, cities,presenter);
         mList.setAdapter(mAdapter);
 
         mEditText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    searchByName();
+                    String search = mEditText.getText().toString();
+                    presenter.searchByName(search);
                 }
                 return false;
             }
@@ -80,30 +71,37 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        String search = mEditText.getText().toString();
+
         if (id == R.id.menu_celcius) {
-            updateUnitIfNecessary("metric");
+            presenter.updateUnitIfNecessary("metric", search);
             return true;
         } else if (id == R.id.menu_fahrenheit) {
-            updateUnitIfNecessary("imperial");
+            presenter.updateUnitIfNecessary("imperial", search);
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateUnitIfNecessary(String newUnits) {
-        String currentUnits = getTemperatureUnit();
-        if (!currentUnits.equals(newUnits)) {
-            setTemperatureUnit(newUnits);
-            searchByName();
-        }
+
+    public void showMessage(String message){
+        Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
+
     }
 
     public void onSearchClick(View view) {
-        searchByName();
+        String search = mEditText.getText().toString();
+        presenter.searchByName(search);
     }
 
-    private void onStartLoading() {
+    public Context getContext() {
+
+        return this;
+    }
+
+    public void onStartLoading() {
         mList.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTextView.setVisibility(View.GONE);
@@ -111,18 +109,24 @@ public class MainActivity extends AppCompatActivity {
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)
-                     getSystemService(Context.INPUT_METHOD_SERVICE);
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
-    private void onFinishLoading(WeatherManager.FindResult result){
+    public void onFinishLoading(WeatherManager.FindResult result) {
 
         mProgressBar.setVisibility(View.GONE);
         cities.clear();
 
         if (result.list.size() > 0) {
             cities.addAll(result.list);
+            cities.sort(new Comparator<City>() {
+                @Override
+                public int compare(City city, City t1) {
+                    return city.getTemperature().compareTo(t1.getTemperature());
+                }
+            });
             mList.setVisibility(View.VISIBLE);
             mAdapter.notifyDataSetChanged();
         } else {
@@ -130,112 +134,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onFinishLoadingWithError() {
+    public void onFinishLoadingWithError() {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mTextView.setText("Error");
     }
 
-    public boolean isDeviceConnected() {
-        ConnectivityManager cm = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
-    }
-
-    private void searchByName() {
-        if (!isDeviceConnected()) {
-            Toast.makeText(this, "No connection!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        String search = mEditText.getText().toString();
-        if (TextUtils.isEmpty(search)) {
-            return;
-        }
-
-        onStartLoading();
-
-        WeatherService wService = WeatherManager.getService();
-        String units = getTemperatureUnit();
-        final Call<FindResult> findCall = wService.find(search, units, WeatherManager.API_KEY);
-        findCall.enqueue(new Callback<FindResult>() {
-            @Override
-            public void onResponse(Call<FindResult> call, Response<FindResult> response) {
-                onFinishLoading(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<FindResult> call, Throwable t) {
-                onFinishLoadingWithError();
-            }
-        });
-    }
-
-    public void setTemperatureUnit(String value) {
-        SharedPreferences.Editor editor = mSharedPref.edit();
-        editor.putString(TEMPERATURE_UNIT_KEY, value);
-        editor.apply();
-    }
-
-    public String getTemperatureUnit() {
-        return mSharedPref.getString(TEMPERATURE_UNIT_KEY, "metric");
-    }
-
-    public class FindItemAdapter extends ArrayAdapter<WeatherManager.City> {
-
-        public FindItemAdapter(Context context, ArrayList<WeatherManager.City> cities) {
-            super(context, 0, cities);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            final WeatherManager.City city = getItem(position);
-
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext())
-                        .inflate(R.layout.city_list_item, parent, false);
-            }
-            TextView cityName = convertView.findViewById(R.id.cityNameTxt);
-            cityName.setText(city.getTitle());
-
-            TextView description = convertView.findViewById(R.id.descriptionTxt);
-            description.setText(city.getDescription());
-
-            TextView metric = convertView.findViewById(R.id.metricTxt);
-            String units = getTemperatureUnit();
-            if ("metric".equals(units)) {
-                metric.setText("ºC");
-            } else {
-                metric.setText("ºF");
-            }
-
-            TextView temp = convertView.findViewById(R.id.tempTxt);
-            temp.setText(city.getTemperature());
-
-            TextView wind = convertView.findViewById(R.id.windTxt);
-            if ("metric".equals(units)) {
-                wind.setText(city.getWind() + " m/s");
-            } else {
-                wind.setText(city.getWind() + " m/h");
-            }
-
-            TextView clouds = convertView.findViewById(R.id.cloudsTxt);
-            clouds.setText(city.getClouds());
-
-            TextView pressure = convertView.findViewById(R.id.pressureTxt);
-            pressure.setText(city.getPressure());
-
-            int resId = getContext().getResources().getIdentifier(
-                    "w_"+city.weather.get(0).icon,
-                    "drawable",
-                    getContext().getPackageName());
-
-            ImageView icon = convertView.findViewById(R.id.weatherIcon);
-            icon.setImageResource(resId);
-
-            return convertView;
-        }
-    }
+//
+//    private void searchByName() {
+//        String search = mEditText.getText().toString();
+//
+//    }
 }
