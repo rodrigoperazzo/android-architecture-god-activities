@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements IView {
         mProgressBar = findViewById(R.id.progressBar);
         mList = findViewById(R.id.list);
 
-        mAdapter = new FindItemAdapter(this, cities);
+        mAdapter = new FindItemAdapter(this, cities,presenter);
         mList.setAdapter(mAdapter);
 
         mEditText.setOnKeyListener(new View.OnKeyListener() {

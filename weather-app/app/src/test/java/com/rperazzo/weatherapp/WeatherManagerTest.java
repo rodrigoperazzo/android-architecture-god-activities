@@ -1,50 +1,29 @@
 package com.rperazzo.weatherapp;
 
 import com.rperazzo.weatherapp.Model.City;
-import com.rperazzo.weatherapp.View.ICallback;
+import com.rperazzo.weatherapp.View.IView;
 import com.rperazzo.weatherapp.Model.IWeatherManager;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.rperazzo.weatherapp.WeatherManager.*;
+import static org.mockito.Matchers.any;
 
 public class WeatherManagerTest {
 
     IWeatherManager weatherManager;
 
-    ICallback callback;
-
-    @Before
-    public void init(){
-         MockitoAnnotations.initMocks(callback);
-
-    }
     @Test
     public void testFindCityExpectedOlinda() {
 
-//        WeatherManager weatherManager = new WeatherManager();
-//
-//        City city = new City();
-//        city.name = "Olinda";
-//        List<City> list = new ArrayList<City>();
-//        list.add(city);
-//
-//        WeatherManager.FindResult findResult = new WeatherManager.FindResult(list);
-//
-//        when(callback.onFinishLoading(findResult));
-//        when(weatherManager.getResults("olinda","C",callback));
-//
-//        //action
-//        weatherManager.getResults("olinda","C",callback);
-//
-//
-//        Assert.assertEquals("Olinda", return.);
+        IWeatherManager weatherManager = Mockito.spy(IWeatherManager.class);
+        IView callback = Mockito.spy(IView.class);
+        weatherManager.getResults("Olinda","metric",callback);
+
+        Mockito.verify(callback).onFinishLoading((WeatherManager.FindResult) any());
 
     }
 }

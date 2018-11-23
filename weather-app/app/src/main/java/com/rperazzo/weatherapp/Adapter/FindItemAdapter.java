@@ -9,15 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rperazzo.weatherapp.Model.City;
+import com.rperazzo.weatherapp.Presenter.IPresenter;
 import com.rperazzo.weatherapp.R;
-import com.rperazzo.weatherapp.Util.Util;
 
 import java.util.ArrayList;
 
 public class FindItemAdapter extends ArrayAdapter<City> {
-
-    public FindItemAdapter(Context context, ArrayList<City> cities) {
+   private IPresenter _presenter;
+    public FindItemAdapter(Context context, ArrayList<City> cities, IPresenter presenter) {
         super(context, 0, cities);
+        _presenter =  presenter;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class FindItemAdapter extends ArrayAdapter<City> {
         description.setText(city.getDescription());
 
         TextView metric = convertView.findViewById(R.id.metricTxt);
-        String units = Util.getTemperatureUnit(getContext());
+        String units = _presenter.getTemperatureUnit();
         if ("metric".equals(units)) {
             metric.setText("ºC");
         } else {

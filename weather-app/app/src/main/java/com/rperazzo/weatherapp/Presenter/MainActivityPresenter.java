@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import com.rperazzo.weatherapp.Util.Util;
 import com.rperazzo.weatherapp.View.IView;
 import com.rperazzo.weatherapp.WeatherManager;
 
