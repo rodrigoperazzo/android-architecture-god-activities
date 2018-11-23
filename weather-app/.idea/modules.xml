@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\repositorioLeo\android-architecture-god-activity\weather-app\app\app.iml" filepath="C:\repositorioLeo\android-architecture-god-activity\weather-app\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/weather-app.iml" filepath="$PROJECT_DIR$/weather-app.iml" />
+      <module fileurl="file://C:\repositorioLeo\android-architecture-god-activity\weather-app\weather-app.iml" filepath="C:\repositorioLeo\android-architecture-god-activity\weather-app\weather-app.iml" />
     </modules>
   </component>
 </project>
