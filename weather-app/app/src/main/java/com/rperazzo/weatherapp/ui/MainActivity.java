@@ -32,6 +32,10 @@ import com.rperazzo.weatherapp.presentation.WeatherPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
+
 public class MainActivity extends AppCompatActivity implements WeatherContract.View {
 
     private EditText mEditText;
@@ -40,6 +44,11 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     private ListView mList;
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
+
+    private Disposable errorObserver;
+    private Disposable cityListObservable;
+    private Disposable temperatureUnitObserver;
+    private Disposable loadingObservable;
 
     WeatherContract.Presenter mPresenter;
 
@@ -79,13 +88,68 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.onAttachView(this);
+        //mPresenter.onAttachView(this);
+        errorObserver = mPresenter.getErrorObservable().doOnNext(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                onFinishLoadingWithError(s);
+            }
+        }).subscribe();
+
+        cityListObservable = mPresenter.getCityListObservable().doOnNext(new Consumer<List<City>>() {
+            @Override
+            public void accept(List<City> cities) throws Exception {
+                onFinishLoading(cities);
+            }
+        }).subscribe();
+
+        temperatureUnitObserver = mPresenter.getTemperatureUnitObservable().doOnNext(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                onChangeUnit(s);
+            }
+        }).subscribe();
+
+        loadingObservable = mPresenter.getLoadingObservable().doOnNext(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    onStartLoading();
+
+                }
+                else{
+                    onStopLoading();
+                }
+            }
+        }).subscribe();
+         /*       .subscribeWith(new DisposableObserver<String>() {
+
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        })*/
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.onDettachView();
+        //mPresenter.onDettachView();
+        cityListObservable.dispose();
+        errorObserver.dispose();
+        loadingObservable.dispose();
+        temperatureUnitObserver.dispose();
+
     }
 
     @Override
@@ -132,13 +196,18 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         }
     }
 
-    @Override
-    public void onFinishLoading(List<City> list, String units) {
+    public void onChangeUnit( String units) {
+        mAdapter.setUnits(units);
+    }
+
+
+    public void onStopLoading() {
         mProgressBar.setVisibility(View.GONE);
+        mList.setVisibility(View.VISIBLE);
+    }
+    public void onFinishLoading(List<City> list) {
         cities.clear();
         cities.addAll(list);
-        mList.setVisibility(View.VISIBLE);
-        mAdapter.setUnits(units);
         mAdapter.notifyDataSetChanged();
     }
 
