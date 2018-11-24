@@ -1,7 +1,6 @@
 package com.rperazzo.weatherapp.presentation;
 
 import android.annotation.SuppressLint;
-import android.widget.Toast;
 
 import com.rperazzo.weatherapp.model.settings.SettingsRepository;
 import com.rperazzo.weatherapp.model.weather.City;
@@ -10,17 +9,20 @@ import com.rperazzo.weatherapp.model.weather.remote.FindResult;
 
 import java.util.List;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class WeatherPresenter implements WeatherContract.Presenter {
 
     WeatherRepository mWeatherRepository;
     SettingsRepository mSettingsRepository;
-    WeatherContract.View mView;
+
+    private PublishSubject<Boolean> loadingSubject = PublishSubject.create();
+    private PublishSubject<List<City>> listSubject = PublishSubject.create();
+    private PublishSubject<String> unitsubject = PublishSubject.create();
 
     public WeatherPresenter(WeatherRepository weatherRepo, SettingsRepository settingsRepo) {
         mWeatherRepository = weatherRepo;
@@ -28,27 +30,24 @@ public class WeatherPresenter implements WeatherContract.Presenter {
     }
 
     @Override
-    public void onAttachView(WeatherContract.View view) {
-        mView = view;
+    public Observable<Boolean> getLoadingObservable() {
+        return loadingSubject;
     }
 
     @Override
-    public void onDettachView() {
-        mView = null;
+    public Observable<List<City>> getListObservable() {
+        return listSubject;
+    }
+
+    @Override
+    public Observable<String> getUnitsObservable() {
+        return unitsubject;
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void onSearchClick(String searchText) {
-        if (mView == null) {
-            return;
-        }
-
-        if (searchText == null || searchText.isEmpty()) {
-            return;
-        }
-
-        mView.onStartLoading();
+        loadingSubject.onNext(true);
         final String units = mSettingsRepository.getTemperatureUnit();
 
         mWeatherRepository.search(searchText, units)
@@ -58,15 +57,19 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
                     @Override
                     public void onSuccess(FindResult findResult) {
-                        if(findResult != null & findResult.list.size() > 0)
-                            mView.onFinishLoading(findResult.list, units);
-                        else
-                            mView.onFinishLoadingWithError("No results!");
+                        if(findResult != null & findResult.list.size() > 0) {
+                            loadingSubject.onNext(false);
+                            listSubject.onNext((findResult.list));
+                            unitsubject.onNext(units);
+                        }
+                        else {
+                            listSubject.onError(new Exception("No results!"));
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mView.onFinishLoadingWithError(e.getMessage());
+                        listSubject.onError(e);
                     }
                 });
     }
@@ -80,20 +83,4 @@ public class WeatherPresenter implements WeatherContract.Presenter {
         }
     }
 
-    @Override
-    public void onFinishSearching(List<City> list) {
-        if (mView == null) {
-            return;
-        }
-        if (list != null && list.size() > 0) {
-            mView.onFinishLoading(list, mSettingsRepository.getTemperatureUnit());
-        } else {
-            mView.onFinishLoadingWithError("No results.");
-        }
-    }
-
-    @Override
-    public void onFinishSearchingWithError(String error) {
-        mView.onFinishLoadingWithError(error);
-    }
 }

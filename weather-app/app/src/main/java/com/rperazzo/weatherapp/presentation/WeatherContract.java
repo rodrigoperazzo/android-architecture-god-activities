@@ -4,20 +4,18 @@ import com.rperazzo.weatherapp.model.weather.City;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public interface WeatherContract {
 
     interface Presenter {
-        void onAttachView(View view);
-        void onDettachView();
         void onSearchClick(String searchText);
         void onUnitClick(String unitClicked, String currentText);
-        void onFinishSearching(List<City> list);
-        void onFinishSearchingWithError(String error);
+        Observable<Boolean> getLoadingObservable();
+        Observable<List<City>> getListObservable();
+        Observable<String> getUnitsObservable();
     }
 
     interface View {
-        void onStartLoading();
-        void onFinishLoading(List<City> list, String units);
-        void onFinishLoadingWithError(String error);
     }
 }

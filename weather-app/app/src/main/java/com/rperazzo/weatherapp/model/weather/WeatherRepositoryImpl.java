@@ -21,6 +21,6 @@ public class WeatherRepositoryImpl implements WeatherRepository {
             return mRemote.find(text, units);
         }
 
-        return null;
+        return Single.error(new Exception("O campo de pesquisa esta vazio!"));
     }
 }

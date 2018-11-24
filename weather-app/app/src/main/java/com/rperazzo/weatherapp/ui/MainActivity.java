@@ -1,5 +1,6 @@
 package com.rperazzo.weatherapp.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -31,6 +32,9 @@ import com.rperazzo.weatherapp.presentation.WeatherPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements WeatherContract.View {
 
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
                 return false;
             }
         });
+
         initPresenter();
     }
 
@@ -74,18 +79,74 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         SettingsLocal settingsLocal = new SettingsLocalImpl(this);
         SettingsRepository settingsRepository = new SettingsRepositoryImpl(settingsLocal);
         mPresenter = new WeatherPresenter(weatherRepository, settingsRepository);
+        getObservables();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onAttachView(this);
-    }
+    @SuppressLint("CheckResult")
+    private void getObservables() {
+        mPresenter.getListObservable()
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<List<City>>() {
+                    @Override
+                    public void onNext(List<City> list) {
+                        cities.clear();
+                        cities.addAll(list);
+                        mList.setVisibility(View.VISIBLE);
+                        mAdapter.notifyDataSetChanged();
+                    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.onDettachView();
+                    @Override
+                    public void onError(Throwable e) {
+                        showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mPresenter.getLoadingObservable()
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<Boolean>() {
+
+                    @Override
+                    public void onNext(Boolean loading) {
+                        if(loading)
+                            mProgressBar.setVisibility(View.VISIBLE);
+                        else
+                            mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mPresenter.getUnitsObservable()
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(new DisposableObserver<String>() {
+
+                    @Override
+                    public void onNext(String units) {
+                        mAdapter.setUnits(units);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -118,32 +179,7 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         searchByName();
     }
 
-    @Override
-    public void onStartLoading() {
-        mList.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
-        mTextView.setVisibility(View.GONE);
-
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)
-                     getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    @Override
-    public void onFinishLoading(List<City> list, String units) {
-        mProgressBar.setVisibility(View.GONE);
-        cities.clear();
-        cities.addAll(list);
-        mList.setVisibility(View.VISIBLE);
-        mAdapter.setUnits(units);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onFinishLoadingWithError(String error) {
+    private void showError(String error) {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mTextView.setVisibility(View.VISIBLE);
