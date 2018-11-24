@@ -1,7 +1,10 @@
 package com.rperazzo.weatherapp.model.weather;
 
+import com.rperazzo.weatherapp.model.weather.remote.FindResult;
 import com.rperazzo.weatherapp.model.weather.remote.WeatherRemote;
 import com.rperazzo.weatherapp.presentation.WeatherContract;
+
+import io.reactivex.Single;
 
 public class WeatherRepositoryImpl implements WeatherRepository {
 
@@ -12,10 +15,12 @@ public class WeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public void search(WeatherContract.Presenter presenter, String text, String units) {
+    public Single<FindResult> search(String text, String units) {
 
         if (text != null && !text.isEmpty() && units != null && !units.isEmpty()) {
-            mRemote.find(text, units, presenter);
+            return mRemote.find(text, units);
         }
+
+        return null;
     }
 }
