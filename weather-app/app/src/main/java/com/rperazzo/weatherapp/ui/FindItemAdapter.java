@@ -1,7 +1,6 @@
-package com.rperazzo.weatherapp.adapter;
+package com.rperazzo.weatherapp.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rperazzo.weatherapp.R;
-import com.rperazzo.weatherapp.model.City;
+import com.rperazzo.weatherapp.model.weather.City;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FindItemAdapter extends ArrayAdapter<City> {
 
-    private String metric;
+    String mUnits;
 
-    public FindItemAdapter(Context context, List<City> cities, String metric) {
+    public FindItemAdapter(Context context, ArrayList<City> cities) {
         super(context, 0, cities);
+    }
 
-        this.metric = metric;
+    public void setUnits(String units) {
+        mUnits = units;
     }
 
     @Override
@@ -41,8 +41,7 @@ public class FindItemAdapter extends ArrayAdapter<City> {
         description.setText(city.getDescription());
 
         TextView metric = convertView.findViewById(R.id.metricTxt);
-        String units = this.metric;
-        if ("metric".equals(units)) {
+        if ("metric".equals(mUnits)) {
             metric.setText("ºC");
         } else {
             metric.setText("ºF");
@@ -52,7 +51,7 @@ public class FindItemAdapter extends ArrayAdapter<City> {
         temp.setText(city.getTemperature());
 
         TextView wind = convertView.findViewById(R.id.windTxt);
-        if ("metric".equals(units)) {
+        if ("metric".equals(mUnits)) {
             wind.setText(city.getWind() + " m/s");
         } else {
             wind.setText(city.getWind() + " m/h");
@@ -74,7 +73,4 @@ public class FindItemAdapter extends ArrayAdapter<City> {
 
         return convertView;
     }
-
-
-
 }

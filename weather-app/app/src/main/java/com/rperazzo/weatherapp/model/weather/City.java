@@ -1,4 +1,4 @@
-package com.rperazzo.weatherapp.model;
+package com.rperazzo.weatherapp.model.weather;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -38,11 +38,25 @@ public class City implements Serializable {
         return this.weather.get(0).description;
     }
 
+    public class Sys implements Serializable {
+        public String country;
+    }
 
+    public class Main implements Serializable {
+        public double temp;
+        public double pressure;
+    }
 
+    public class Wind implements Serializable {
+        public double speed;
+    }
 
+    public class Clouds implements Serializable {
+        public int all;
+    }
 
-
-
-
+    public class Weather implements Serializable {
+        public String description;
+        public String icon;
+    }
 }

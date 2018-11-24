@@ -1,15 +1,9 @@
-package com.rperazzo.weatherapp;
-
-import java.util.List;
+package com.rperazzo.weatherapp.model.weather.remote;
 
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
-import com.rperazzo.weatherapp.model.*;
-import com.rperazzo.weatherapp.provider.IWeatherProvider;
 
 public class WeatherManager {
 
@@ -18,28 +12,18 @@ public class WeatherManager {
     public static final String API_KEY =
             "520d6b47a12735bee8f69c57737d145f";
 
-
     private static OkHttpClient mClient = new OkHttpClient();
 
-    public static IWeatherProvider getService() {
+    public static WeatherService getService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(mClient)
                 .build();
 
-        return retrofit.create(IWeatherProvider.class);
+        return retrofit.create(WeatherService.class);
     }
-
-    public class FindResult {
-        public final List<City> list;
-
-        public FindResult(List<City> list) {
-            this.list = list;
-        }
-    }
-
-
 }
 
 
