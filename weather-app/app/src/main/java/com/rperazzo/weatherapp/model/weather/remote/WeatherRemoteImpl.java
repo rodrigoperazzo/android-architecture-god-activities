@@ -1,7 +1,12 @@
 package com.rperazzo.weatherapp.model.weather.remote;
 
+import com.rperazzo.weatherapp.model.weather.City;
 import com.rperazzo.weatherapp.presentation.WeatherContract;
 
+import java.util.List;
+
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -14,29 +19,16 @@ public class WeatherRemoteImpl implements WeatherRemote {
         mWeatherService = WeatherManager.getService();
     }
 
-    public void find(String text, String units, final WeatherContract.Presenter presenter) {
+    public Single<List<City>> find(String text, String units) {
 
-        final Call<FindResult> findCall = mWeatherService.find(text, units, WeatherManager.API_KEY);
-        findCall.enqueue(new Callback<FindResult>() {
+        final Single<FindResult> findCall = mWeatherService.find(text, units, WeatherManager.API_KEY);
+        Single<List<City>> cidades = findCall.map(new Function<FindResult, List<City>>() {
             @Override
-            public void onResponse(Call<FindResult> call, Response<FindResult> response) {
-                if (response != null) {
-                    FindResult result = response.body();
-                    if (result != null) {
-                        presenter.onFinishSearching(result.list);
-                    } else {
-                        presenter.onFinishSearching(null);
-                    }
-                } else {
-                    presenter.onFinishSearching(null);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FindResult> call, Throwable t) {
-                presenter.onFinishSearchingWithError("error");
+            public List<City> apply(FindResult findResult) throws Exception {
+                return findResult.list;
             }
         });
+        return cidades;
     }
 
 }

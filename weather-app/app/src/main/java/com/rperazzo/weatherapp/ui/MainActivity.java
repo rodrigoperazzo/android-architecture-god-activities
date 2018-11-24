@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     public void onFinishLoadingWithError(String error) {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
+        mTextView.setVisibility(View.VISIBLE);
         mTextView.setText(error);
     }
 
