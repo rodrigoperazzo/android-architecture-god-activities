@@ -1,10 +1,20 @@
 package com.rperazzo.weatherapp.presentation;
 
+import android.annotation.SuppressLint;
+import android.widget.Toast;
+
 import com.rperazzo.weatherapp.model.settings.SettingsRepository;
 import com.rperazzo.weatherapp.model.weather.City;
 import com.rperazzo.weatherapp.model.weather.WeatherRepository;
+import com.rperazzo.weatherapp.model.weather.remote.FindResult;
 
 import java.util.List;
+
+import io.reactivex.Scheduler;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class WeatherPresenter implements WeatherContract.Presenter {
 
@@ -27,6 +37,7 @@ public class WeatherPresenter implements WeatherContract.Presenter {
         mView = null;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onSearchClick(String searchText) {
         if (mView == null) {
@@ -38,8 +49,26 @@ public class WeatherPresenter implements WeatherContract.Presenter {
         }
 
         mView.onStartLoading();
-        String units = mSettingsRepository.getTemperatureUnit();
-        mWeatherRepository.search(this, searchText, units);
+        final String units = mSettingsRepository.getTemperatureUnit();
+
+        mWeatherRepository.search(searchText, units)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<FindResult>(){
+
+                    @Override
+                    public void onSuccess(FindResult findResult) {
+                        if(findResult != null & findResult.list.size() > 0)
+                            mView.onFinishLoading(findResult.list, units);
+                        else
+                            mView.onFinishLoadingWithError("No results!");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.onFinishLoadingWithError(e.getMessage());
+                    }
+                });
     }
 
     @Override

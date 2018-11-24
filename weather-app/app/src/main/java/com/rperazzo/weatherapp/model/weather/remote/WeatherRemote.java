@@ -1,7 +1,7 @@
 package com.rperazzo.weatherapp.model.weather.remote;
 
-import com.rperazzo.weatherapp.presentation.WeatherContract;
+import io.reactivex.Single;
 
 public interface WeatherRemote {
-    void find(String text, String units, final WeatherContract.Presenter presenter);
+    Single<FindResult> find(String text, String units);
 }
