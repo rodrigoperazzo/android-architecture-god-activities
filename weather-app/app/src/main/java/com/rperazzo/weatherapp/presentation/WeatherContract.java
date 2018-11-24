@@ -17,7 +17,7 @@ public interface WeatherContract {
 
     interface View {
         void onStartLoading();
-        void onFinishLoading(List<City> list, String units);
+        //void onFinishLoading(List<City> list);
         void onFinishLoadingWithError(String error);
     }
 }

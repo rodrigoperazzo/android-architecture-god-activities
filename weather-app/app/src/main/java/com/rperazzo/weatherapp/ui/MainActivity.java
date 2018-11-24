@@ -26,11 +26,15 @@ import com.rperazzo.weatherapp.model.weather.WeatherRepository;
 import com.rperazzo.weatherapp.model.weather.WeatherRepositoryImpl;
 import com.rperazzo.weatherapp.model.weather.remote.WeatherRemote;
 import com.rperazzo.weatherapp.model.weather.remote.WeatherRemoteImpl;
+import com.rperazzo.weatherapp.presentation.ViewModel;
 import com.rperazzo.weatherapp.presentation.WeatherContract;
-import com.rperazzo.weatherapp.presentation.WeatherPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.subjects.AsyncSubject;
 
 public class MainActivity extends AppCompatActivity implements WeatherContract.View {
 
@@ -41,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     private FindItemAdapter mAdapter;
     private ArrayList<City> cities = new ArrayList<>();
 
-    WeatherContract.Presenter mPresenter;
+    ViewModel vModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,19 +77,21 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         WeatherRepository weatherRepository = new WeatherRepositoryImpl(weatherRemote);
         SettingsLocal settingsLocal = new SettingsLocalImpl(this);
         SettingsRepository settingsRepository = new SettingsRepositoryImpl(settingsLocal);
-        mPresenter = new WeatherPresenter(weatherRepository, settingsRepository);
+        vModel = new ViewModel(weatherRepository, settingsRepository);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.onAttachView(this);
+        vModel.onAttachView(this);
+        bind();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.onDettachView();
+        vModel.onDettachView();
+        unbind();
     }
 
     @Override
@@ -111,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
 
     private void onUnitClick(String unitClicked) {
         String search = mEditText.getText().toString();
-        mPresenter.onUnitClick(unitClicked, search);
+        vModel.onUnitClick(unitClicked, search);
     }
 
     public void onSearchClick(View view) {
@@ -132,13 +138,12 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         }
     }
 
-    @Override
-    public void onFinishLoading(List<City> list, String units) {
+    public void onFinishLoading(List<City> list) {
         mProgressBar.setVisibility(View.GONE);
         cities.clear();
         cities.addAll(list);
         mList.setVisibility(View.VISIBLE);
-        mAdapter.setUnits(units);
+//        mAdapter.setUnits(units);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -163,7 +168,50 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
         }
 
         String search = mEditText.getText().toString();
-        mPresenter.onSearchClick(search);
+        //mPresenter.onSearchClick(search);
+        vModel.onSearchClick(search);
+    }
+
+    public void bind(){
+
+
+        vModel.getLoadingObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        b -> {
+                            if (b){
+                                onStartLoading();
+                            }
+                        },
+                        error -> {
+                            new Throwable("Erro");
+                        });
+
+        vModel.getCitySubject()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        cities -> {
+                            onFinishLoading(cities);
+                        },
+                        error -> {
+                            new Throwable("Erro");
+                        });
+
+        vModel.getTempSubject()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        c -> {
+                            mAdapter.setUnits(c);
+                        },
+                        error -> {
+                            new Throwable("Erro");
+                        });
+
+
+    }
+
+    public void unbind(){
+
     }
 
 }
