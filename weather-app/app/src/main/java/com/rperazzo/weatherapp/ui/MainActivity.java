@@ -29,6 +29,9 @@ import com.rperazzo.weatherapp.model.weather.remote.WeatherRemoteImpl;
 import com.rperazzo.weatherapp.presentation.WeatherContract;
 import com.rperazzo.weatherapp.presentation.WeatherPresenter;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,15 +46,20 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
 
     WeatherContract.Presenter mPresenter;
 
+    private Disposable errorObserver;
+    private Disposable cityListObservable;
+    private Disposable temperatureUnitObserver;
+    private Disposable loadingObservable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mEditText = (EditText) findViewById(R.id.editText);
-        mTextView = (TextView) findViewById(R.id.textView);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mList = (ListView) findViewById(R.id.list);
+        mEditText = findViewById(R.id.editText);
+        mTextView = findViewById(R.id.textView);
+        mProgressBar = findViewById(R.id.progressBar);
+        mList = findViewById(R.id.list);
 
         mAdapter = new FindItemAdapter(this, cities);
         mList.setAdapter(mAdapter);
@@ -79,13 +87,48 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.onAttachView(this);
+        errorObserver = mPresenter.getErrorObservable().doOnNext(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                onFinishLoadingWithError(s);
+            }
+        }).subscribe();
+
+        cityListObservable = mPresenter.getCityListObservable().doOnNext(new Consumer<List<City>>() {
+            @Override
+            public void accept(List<City> cities) throws Exception {
+                onFinishLoading(cities);
+            }
+        }).subscribe();
+
+        temperatureUnitObserver = mPresenter.getTemperatureUnitObservable().doOnNext(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                onChangeUnit(s);
+            }
+        }).subscribe();
+
+        loadingObservable = mPresenter.getLoadingObservable().doOnNext(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if(aBoolean){
+                    onStartLoading();
+
+                }
+                else{
+                    onStopLoading();
+                }
+            }
+        }).subscribe();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.onDettachView();
+        cityListObservable.dispose();
+        errorObserver.dispose();
+        loadingObservable.dispose();
+        temperatureUnitObserver.dispose();
     }
 
     @Override
@@ -133,21 +176,26 @@ public class MainActivity extends AppCompatActivity implements WeatherContract.V
     }
 
     @Override
-    public void onFinishLoading(List<City> list, String units) {
-        mProgressBar.setVisibility(View.GONE);
-        cities.clear();
-        cities.addAll(list);
-        mList.setVisibility(View.VISIBLE);
-        mAdapter.setUnits(units);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onFinishLoadingWithError(String error) {
         mProgressBar.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
         mTextView.setVisibility(View.VISIBLE);
         mTextView.setText(error);
+    }
+
+    public void onChangeUnit( String units) {
+        mAdapter.setUnits(units);
+    }
+
+    public void onStopLoading() {
+        mProgressBar.setVisibility(View.GONE);
+        mList.setVisibility(View.VISIBLE);
+    }
+
+    public void onFinishLoading(List<City> list) {
+        cities.clear();
+        cities.addAll(list);
+        mAdapter.notifyDataSetChanged();
     }
 
     public boolean isDeviceConnected() {
