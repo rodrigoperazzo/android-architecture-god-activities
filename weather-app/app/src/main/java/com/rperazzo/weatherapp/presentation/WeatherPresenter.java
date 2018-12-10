@@ -6,6 +6,10 @@ import com.rperazzo.weatherapp.model.weather.WeatherRepository;
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+
 public class WeatherPresenter implements WeatherContract.Presenter {
 
     WeatherRepository mWeatherRepository;
@@ -39,7 +43,22 @@ public class WeatherPresenter implements WeatherContract.Presenter {
 
         mView.onStartLoading();
         String units = mSettingsRepository.getTemperatureUnit();
-        mWeatherRepository.search(this, searchText, units);
+        mWeatherRepository.search(searchText, units)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<List<City>>(){
+                    @Override
+                    public void onSuccess(List<City> result) {
+                        // update UI
+                        onFinishSearching(result);
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        // show error
+                        onFinishSearchingWithError(e.getMessage());
+                    }
+                });
+
     }
 
     @Override
